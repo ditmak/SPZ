@@ -1,0 +1,80 @@
+package com.csl.util.baidu;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
+import java.util.Set;
+
+import com.csl.util.io.ByteIOUtils;
+
+public class BaiduHTTPUtil {
+	public static HttpURLConnection getConn(String url, String cookies,
+			String method) throws IOException {
+		URL temp = new URL(url);
+		HttpURLConnection connection = (HttpURLConnection) temp
+				.openConnection();
+		if (cookies != null) {
+			connection.setRequestProperty("cookie", cookies);
+		}
+		connection.setRequestProperty("host", "pan.baidu.com");
+		connection.setRequestProperty("referer", "http://pan.baidu.com/disk/home");
+		connection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; rv:29.0) Gecko/20100101 Firefox/29.0");
+		connection.setRequestProperty("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+
+		connection.setRequestProperty("accept-language", "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3");
+		connection.setRequestProperty("connection", "keep-alive");
+		connection.setRequestProperty("pragma", "no-cache");
+		connection.setRequestMethod(method);
+		return connection;
+	}
+
+	public static String getURLContent(String url,String cookies,String method
+			) {
+		return  getURLContent(url,cookies,method,null);
+	}
+
+	public static String getURLContent(String url,String cookies,String method,
+			 Map<String, String> values) {
+	
+		try {
+			HttpURLConnection conn = sendInfo(url, cookies, method, values);
+			InputStream ips = conn.getInputStream();
+			byte[] buf = ByteIOUtils.getInputSreamBytes(ips);
+			return new String(buf);
+		} catch (Exception e) {
+			e.printStackTrace();
+			//return getURLContent(url,cookies,method,values);
+			throw new RuntimeException();
+		}
+	
+	}
+	public static HttpURLConnection sendInfo(String url,String cookies,String method,
+			 Map<String, String> values) 
+	{
+		try{
+		HttpURLConnection conn = getConn(url, cookies, method);
+		if (values != null) {
+			StringBuffer sb = new StringBuffer();
+			Set<String> keys = values.keySet();
+			for (String key : keys) {
+				sb.append(key).append("=").append(values.get(key))
+						.append("&");
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			conn.setDoOutput(true);
+			conn.getOutputStream().write(sb.toString().getBytes());
+			conn.getOutputStream().flush();
+			conn.getOutputStream().close();
+		}
+		conn.connect();
+		return conn;}
+		catch (Exception e) {
+			e.printStackTrace();
+			return sendInfo(url, cookies, method, values);
+		}
+	}
+	
+	
+}
