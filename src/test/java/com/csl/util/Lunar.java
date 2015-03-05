@@ -181,7 +181,6 @@ public class Lunar {
         Calendar today = Calendar.getInstance();
         today.setTime(chineseDateFormat.parse("2015年2月5日"));
         Lunar lunar = new Lunar(today);
-
         System.out.println("北京时间：" + chineseDateFormat.format(today.getTime()) + "　农历" + lunar);
         System.out.println(lunar.cyclical());
         System.out.println(lunar.animalsYear());

@@ -860,6 +860,14 @@ public final class ChineseCalendar extends GregorianCalendar {
     public static void main(String[] args) {
 		ChineseCalendar cal = new ChineseCalendar();
 		String str = cal.getChineseDateString();
+		System.out.println(cal.getChinese(801));
+		System.out.println(cal.getChinese(802));
+		System.out.println(cal.getChinese(803));
+		System.out.println(cal.getChinese(804));
+		System.out.println(cal.getChinese(805));
+		System.out.println(cal.getChinese(806));
+		System.out.println(cal.getChinese(807));
+		System.out.println(cal.getChinese(888));
 		System.out.println(str);
     }
 }
