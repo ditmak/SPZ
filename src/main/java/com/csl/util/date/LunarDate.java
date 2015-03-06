@@ -1,15 +1,31 @@
 package com.csl.util.date;
 
-import java.util.Calendar;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 public class LunarDate {
-	private static final DateTime LUNARBEGIN = new DateTime(1900,1,31,0,0);
 	/**
 	 * 农历信息 ，从农历1900年一月三十一日起
 	 */
+	private static int[] lunarCHUYIMonthInfo = { 0x93, 0x88, 0x5d, 0x90, 0x84,
+			0x59, 0x8d, 0x82, 0x56, 0x8a, 0x5e, 0x92, 0x86, 0x5a, 0x8e, 0x83,
+			0x57, 0x8b, 0x81, 0x94, 0x88, 0x5c, 0x90, 0x85, 0x58, 0x8d, 0x82,
+			0x57, 0x8a, 0x5e, 0x91, 0x86, 0x5a, 0x8e, 0x84, 0x58, 0x8b, 0x5f,
+			0x93, 0x88, 0x5b, 0x8f, 0x85, 0x59, 0x8d, 0x82, 0x56, 0x8a, 0x5d,
+			0x91, 0x86, 0x5b, 0x8e, 0x83, 0x58, 0x8c, 0x5f, 0x92, 0x88, 0x5c,
+			0x8f, 0x85, 0x59, 0x8d, 0x82, 0x55, 0x89, 0x5e, 0x91, 0x86, 0x5b,
+			0x8f, 0x83, 0x57, 0x8b, 0x5f, 0x92, 0x87, 0x5c, 0x90, 0x85, 0x59,
+			0x8d, 0x82, 0x94, 0x89, 0x5d, 0x91, 0x86, 0x5b, 0x8f, 0x84, 0x57,
+			0x8a, 0x5f, 0x93, 0x87, 0x5c, 0x90, 0x85, 0x58, 0x8c, 0x81, 0x56,
+			0x89, 0x5d, 0x92, 0x87, 0x5a, 0x8e, 0x83, 0x57, 0x8a, 0x5f, 0x93,
+			0x88, 0x5c, 0x90, 0x85, 0x59, 0x8c, 0x81, 0x56, 0x8a, 0x5d, 0x91,
+			0x86, 0x5a, 0x8d, 0x83, 0x57, 0x8b, 0x5f, 0x93, 0x88, 0x5c, 0x8f,
+			0x84, 0x58, 0x8c, 0x81, 0x56, 0x8a, 0x5e, 0x91, 0x86, 0x5a, 0x8e,
+			0x82, 0x57, 0x8b, 0x81, 0x93, 0x88, 0x5c, 0x8f, 0x84, 0x58, 0x8c,
+			0x82, 0x55, 0x89, 0x5d, 0x91, 0x85, 0x5a, 0x8e, 0x83, 0x57, 0x8b,
+			0x5f, 0x93, 0x87, 0x5b, 0x8f, 0x85, 0x58, 0x8c, 0x82, 0x56, 0x89,
+			0x5d, 0x91, 0x86, 0x5a, 0x8e, 0x83, 0x58, 0x8a, 0x5e, 0x92, 0x87,
+			0x5b, 0x8f, 0x85, 0x59, 0x8c, 0x81, 0x55, 0x89 };
 	private static long[] lunarInfo = { 0x04bd8, 0x04ae0, 0x0a570, 0x054d5,
 			0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2, 0x04ae0,
 			0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2,
@@ -43,91 +59,100 @@ public class LunarDate {
 
 	/**
 	 * 计算指定一年的农历天数，默认每个月天数为29天，判断每个月的大小月的情况，加上闰月的情况
+	 * 
 	 * @param y
 	 * @return
 	 * @author v-songlechen
 	 */
-	private static int yearDays(int y) {
-        int i, sum = 348;
-        for (i = 0x8000; i > 0x8; i >>= 1) {
-            if ((lunarInfo[y - 1900] & i) != 0) sum += 1;
-        }
-        return (sum + leapDays(y));
-    }
-	
+	public static int yearDays(int y) {
+		int i, sum = 348;
+		for (i = 0x8000; i > 0x8; i >>= 1) {
+			if ((lunarInfo[y - 1900] & i) != 0)
+				sum += 1;
+		}
+		return (sum + leapDays(y));
+	}
+	public static DateTime getLunarStartDay(int year){
+		return new DateTime(year,lunarCHUYIMonthInfo[year-1900]>>6,lunarCHUYIMonthInfo[year-1900]&0x3f,0,0);
+	}
 	/**
 	 * 计算一年闰月的天数，0x0a9d4，后四位为4，即闰月为四月，前四位为0，代表是小月，29天
+	 * 
 	 * @param y
 	 * @return
 	 * @author v-songlechen
 	 */
-	 private static int leapDays(int y) {
-	        if (leapMonth(y) != 0) {
-	            if ((lunarInfo[y - 1900] & 0x10000) != 0)
-	                return 30;
-	            else
-	                return 29;
-	        } else
-	            return 0;
-	    }
-	 /**
-	  *  0x0a9d4 为例，最后四位是4，即闰月为四月，0代表没有闰月
-	  * @param year
-	  * @return
-	  * @author v-songlechen
-	  */
-	 private static int leapMonth(int year) {
-	        return (int) (lunarInfo[year - 1900] & 0xf);
-	    }
-	 /**
-	  *农历y年m月的天数
-	  * @param y
-	  * @param m
-	  * @return
-	  * @author v-songlechen
-	  */
-	 private static int monthDays(int y, int m) {
-	        if ((lunarInfo[y - 1900] & (0x10000 >> m)) == 0)
-	            return 29;
-	        else
-	            return 30;
-	    }
-	 	
-	 public static String toLunarDate(DateTime time){
-		 Days days= Days.daysBetween(LUNARBEGIN, time);
-		 int offset = days.getDays();
-		 int year =0;
-		 int month=0;
-		 StringBuilder sb = new StringBuilder();
-		 for(int i =1900;i<2100;i++){
-			int temp = yearDays(i);
-			if(offset<=temp){
-				year = i;
-				sb.append(year+"年");
+	private static int leapDays(int y) {
+		if (leapMonth(y) != 0) {
+			if ((lunarInfo[y - 1900] & 0x10000) != 0)
+				return 30;
+			else
+				return 29;
+		} else
+			return 0;
+	}
+
+	/**
+	 * 0x0a9d4 为例，最后四位是4，即闰月为四月，0代表没有闰月
+	 * 
+	 * @param year
+	 * @return
+	 * @author v-songlechen
+	 */
+	private static int leapMonth(int year) {
+		return (int) (lunarInfo[year - 1900] & 0xf);
+	}
+
+	/**
+	 * 农历y年m月的天数
+	 * 
+	 * @param y
+	 * @param m
+	 * @return
+	 * @author v-songlechen
+	 */
+	private static int monthDays(int y, int m) {
+		if ((lunarInfo[y - 1900] & (0x10000 >> m)) == 0)
+			return 29;
+		else
+			return 30;
+	}
+
+	public static String toLunarDate(DateTime time) {
+		DateTime beginTime = getLunarStartDay(time.getYear());
+		int year = time.getYear();
+		if(time.isBefore(beginTime)){
+			beginTime = getLunarStartDay(--year);
+		}
+		Days days = Days.daysBetween(beginTime, time);
+		int offset = days.getDays();
+		int month = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append(year+"年");
+		for (int i = 1; i <= 12; i++) {
+			int temp = monthDays(year, i);
+			if (offset <= temp) {
+				month = i;
 				break;
 			}
-			offset-=temp;
-		 }
-		 for(int i=1;i<=12;i++){
-			 int temp = monthDays(year, i);
-			 if(offset<=temp){
-				 month =i;
-				 break;
-			 }
-			 offset-=temp;
-		 }
-		 int leapMonth=leapMonth(year);
-		 offset+=1;
-		 if((leapMonth>0&&month>leapMonth)){
-			 month-=1;
-			 sb.append("闰"+month+"月"+offset+"日");
-		 }else
-		 if(month==0){
-			 sb.append("闰12月"+offset+"日");
-		 }else{
-			 sb.append(month+"月"+offset+"日");
-		 }
-		 return sb.toString();
-	 }
+			offset -= temp;
+		}
+		int leapMonth = leapMonth(year);
+		offset += 1;
+		if (month == 0) {
+			sb.append("闰12月" + offset + "日");
+		} else if ((leapMonth > 0 && month > leapMonth)) {
+			month -= 1;
+			if (month != leapMonth) {
+				offset = offset - leapDays(year) + monthDays(year, month);
+				sb.append(month + "月" + offset + "日");
+			} else {
+				sb.append("闰" + month + "月" + offset + "日");
+			}
+		}else{
+			sb.append(month + "月" + offset + "日");
+		}
+		return sb.toString();
+	}
 
 }
