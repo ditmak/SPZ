@@ -27,4 +27,24 @@ public class TestLunarDate {
 		} 
 		System.out.println(sb1.toString());
 	}
+	@Test
+	public void test4(){
+		//System.out.println(TrunkBranchDate.getTBYear(2015));
+		System.out.println(new TrunkBranchDate().getTBMonth(DateTime.now()));
+	};
+	@Test
+	public void test5(){
+		//System.out.println(TrunkBranchDate.getTBDay(DateTime.now()));
+		System.out.println(new TrunkBranchDate().toString());
+	};
+	@Test
+	public void test6(){
+		System.out.println("7ec967f0e37f14998082b0787b06bd".length());
+		int data = Integer.parseInt("7ec96", 16);
+		System.out.println(data);
+	}
+	@Test
+	public void test7(){
+		System.out.println(new TrunkBranchDate(new DateTime("2015-2-19")));
+	}
 }
