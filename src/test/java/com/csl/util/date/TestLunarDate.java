@@ -47,4 +47,10 @@ public class TestLunarDate {
 	public void test7(){
 		System.out.println(new TrunkBranchDate(new DateTime("2015-2-19")));
 	}
+	@Test
+	public void test8(){
+		DateTime time= LunarDate.getLunarStartDay(2015);
+		System.out.println(time);
+		System.out.println(Constant.lunarCHUYIMonthInfo.length);
+	}
 }

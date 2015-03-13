@@ -4,6 +4,9 @@ import com.csl.util.date.TrunkBranchDate;
 
 public class TBYearMonthValidate implements DateValidater<TrunkBranchDate>{
 	
+	/**
+	 * 与年柱或月柱相同的日柱或时柱不能通过验证
+	 */
 	@Override
 	public int validate(TrunkBranchDate t) {
 		if(isTaiSui(t)||isYueJian(t))
