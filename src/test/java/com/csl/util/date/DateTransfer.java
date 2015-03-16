@@ -2,6 +2,7 @@ package com.csl.util.date;
 
 import java.util.Calendar;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class DateTransfer {
@@ -17,6 +18,11 @@ public class DateTransfer {
 			System.out.println(TimeTransfer.getEarchBranch(cal));
 			cal.add(Calendar.HOUR_OF_DAY, 1);
 		}
+	}
+	@Test
+	public void testDate() throws Exception{
+		DateTime time = WorkTimeDate.plusWorkDays(DateTime.now(), 33);
+		System.out.println(time);
 	}
 	
 

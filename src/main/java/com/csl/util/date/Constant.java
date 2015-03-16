@@ -116,10 +116,10 @@ public class Constant {
 	public final static int[] MONTH_HOUR = { 9, 6, 3, 0, 9, 6, 3, 0, 9, 6, 3, 0 };
 	// 日忌时
 	public final static int[] DAY_TRUNK_HOUR = { 9, 9, 0, 0, 3, 3, 6, 6, 7, 7 };
-
-	public final static int[] BIG_GOBLIN = { 8, 9, 10, 5, 6, 7, 2, 3, 4, 11, 0,
-			1 };
-	public final static int[] LITTEL_GOBLIN = {7,	4,1,	10,	7,	4,	1,10,	7,	4,	1,	10	};
+	// 大煞
+	public final static int[] BIG_GOBLIN = { 8, 9, 10, 5, 6, 7, 2, 3, 4, 11, 0,1 };
+	//小煞
+	public final static int[] LITTLE_GOBLIN = {7,4,1,10,7,4,1,10,7,4,1,10};
 
 	// 根据不同的日柱判断时柱
 	public final static int[][] HOURTB = {
