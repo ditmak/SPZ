@@ -13,8 +13,11 @@ public class WorkTimeDate {
 		//如果几周过后是周末，调整到周一
 		while(result.getDayOfWeek()>5)
 			result = result.plusDays(1);
-		while(day-->0){
-			result = result.plus(1);
+		int offset = day+result.getDayOfWeek();
+		result = result.plusDays(day);
+		if(offset>5)
+		{	
+			result= result.plusDays(2);
 		}
 		return result;
 	}
