@@ -102,27 +102,28 @@ public class LunarDate {
 		Days days = Days.daysBetween(beginTime, time);
 		day = days.getDays();
 		month = 0;
+		int leapMonth = leapMonth(year);
+		
+		
 		for (int i = 1; i <= 12; i++) {
 			int temp = monthDays(year, i);
 			if (day <= temp) {
 				month = i;
 				break;
 			}
-			day -= temp;
+			else if(i==leapMonth){
+				day -= temp;
+				if(day<=leapDays(year)){
+					isLeapMonth=Boolean.TRUE;
+					month = i;
+					break;
+				}
+				day-=leapDays(year);
+			}else {
+			day -= temp;}
 		}
-		int leapMonth = leapMonth(year);
+
 		day += 1;
-		if (month == 0) {
-			isLeapMonth=Boolean.TRUE;
-			month=12;
-		} else if ((leapMonth > 0 && month > leapMonth)) {
-			month -= 1;
-			if (month != leapMonth) {
-				day = day - leapDays(year) + monthDays(year, month);
-			} else {
-				isLeapMonth=Boolean.TRUE;
-			}
-		}
 	}
 	@Override
 	public String toString() {

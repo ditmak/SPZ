@@ -63,9 +63,13 @@ public class TrunkBranchDate {
 	private int dayB;
 	private int hourT;
 	private int hourB;
+	private DateTime date;
+	public DateTime getDate() {
+		return date;
+	}
 	public String getTBYear(DateTime time) {
 		int year = time.getYear();
-		if(time.getMonthOfYear()<2||(time.getMonthOfYear()==2&&time.getDayOfMonth()<getTermDay(time.getYear(), 3)))
+		if(time.getMonthOfYear()<2||(time.getMonthOfYear()==2&&time.getDayOfMonth()<getTermDay(time.getYear(), 2)))
 			year--;
 		int offset = year - 4;
 		yearT = offset % 10;
@@ -84,6 +88,7 @@ public class TrunkBranchDate {
 	}
 
 	public TrunkBranchDate(DateTime time) {
+		this.date = time;
 		getTBYear(time);
 		getTBMonth(time);
 		getTBDay(time);
@@ -93,7 +98,7 @@ public class TrunkBranchDate {
 	public String getTBMonth(DateTime time) {
 		int offset = Months.monthsBetween(new DateTime("1900-1-1"), time)
 				.getMonths() + 13;
-		if(time.getDayOfMonth()<getTermDay(time.getYear(), time.getMonthOfYear()*2-1))
+		if(time.getDayOfMonth()<getTermDay(time.getYear(), time.getMonthOfYear()*2-2))
 			offset--;
 		monthT = offset % 10;
 		monthB = offset % 12;
@@ -102,7 +107,7 @@ public class TrunkBranchDate {
 
 	public String getTBHour(DateTime time) {
 		hourB = getBranch(time.getHourOfDay());
-		hourT = HOURTB[dayT % 6][hourB];
+		hourT = HOURTB[dayT % 5][hourB];
 		return TRUNKS[hourT] + BRANCHES[hourB] + "时";
 	}
 
@@ -121,10 +126,26 @@ public class TrunkBranchDate {
 				+ TRUNKS[hourT] + BRANCHES[hourB] + "时";
 	}
 	public static int getTermDay(int year,int num){
-		int offset = num/4;
-		String subData = TERMDATA[year-1900].substring(offset, offset+5);
+		int offset = (num+1)/4;
+		String subData = TERMDATA[year-1900].substring(offset*5, (offset+1)*5);
 		Integer data = Integer.parseInt(subData, 16);
+		subData = data.toString();
 		int reminder = num%4;
-		return Integer.parseInt(data.toString().substring(reminder/2+reminder,reminder%2==0?reminder+1:reminder+2));
+		String day =null;
+		switch(reminder){
+		case 0:
+			day = subData.substring(0,1);
+			break;
+		case 1:
+			day = subData.substring(1,3);
+			break;
+		case 2:
+			day = subData.substring(3,4);
+			break;
+		case 3:
+			day = subData.substring(4);
+			break;
+		}
+		return Integer.parseInt(day);
 	}
 }

@@ -1,18 +1,14 @@
 package com.csl.util.date.validate;
 
+import com.csl.util.date.LunarDate;
 import com.csl.util.date.TrunkBranchDate;
 
-public class TBYearMonthValidate implements DateValidater<TrunkBranchDate>{
+public class TBYearMonthValidate implements DateValidater{
 	
 	/**
 	 * 与年柱或月柱相同的日柱或时柱不能通过验证
 	 */
-	@Override
-	public int validate(TrunkBranchDate t) {
-		if(isTaiSui(t)||isYueJian(t))
-			return 1;
-		return 0;
-	}
+
 	private boolean isTaiSui(TrunkBranchDate date){
 		if((date.getYearT()==date.getDayT())&&(date.getYearB()==date.getDayB()))
 			return Boolean.TRUE;
@@ -26,6 +22,16 @@ public class TBYearMonthValidate implements DateValidater<TrunkBranchDate>{
 		if((date.getMonthT()==date.getHourT())&&(date.getMonthB()==date.getHourB()))
 			return Boolean.TRUE;
 		return Boolean.FALSE;
+	}
+	@Override
+	public int validate(TrunkBranchDate tbd, LunarDate ld) {
+		if(isTaiSui(tbd)||isYueJian(tbd))
+			return 1;
+		return 0;
+	}
+	@Override
+	public String getMessAge() {
+		return "太岁月建";
 	}
 
 }
