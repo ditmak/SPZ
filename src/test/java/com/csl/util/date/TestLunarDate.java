@@ -2,6 +2,7 @@ package com.csl.util.date;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+import static com.csl.util.date.Constant.*;
 
 public class TestLunarDate {
 	@Test
@@ -52,5 +53,10 @@ public class TestLunarDate {
 		DateTime time= LunarDate.getLunarStartDay(2015);
 		System.out.println(time);
 		System.out.println(Constant.lunarCHUYIMonthInfo.length);
+	}
+	@Test
+	public void test9(){
+		System.out.println(TrunkBranchDate.getTermDay(2015, 7));
+		System.out.println(lunarInfo[2014-1900]);
 	}
 }

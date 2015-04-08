@@ -1,5 +1,9 @@
 package com.csl.util.date.validate;
 
-public interface DateValidater<T> {
-	int validate(T t);
+import com.csl.util.date.LunarDate;
+import com.csl.util.date.TrunkBranchDate;
+
+public interface DateValidater {
+	int validate(TrunkBranchDate tbd,LunarDate ld);
+	String getMessAge();
 }
