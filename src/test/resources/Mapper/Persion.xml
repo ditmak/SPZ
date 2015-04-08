@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csl.mybatis.DAO.PersionDAO">
+
+    <select id="queryPersion" resultType="com.huoyunren.demo.entities.Persion">
+        select * from persion
+    </select>
+     <select id="queryPersions" resultType="com.huoyunren.demo.entities.Persion">
+        select * from persion where name like concat('%',#{name},'%')
+    </select>
+    <insert id ="batchInsert">
+    insert into persion(id,name,birthday1) values
+    <foreach collection="list" item="item" index="index" separator="," >
+    (#{item.id},#{item.name},#{item.birthDay})
+    </foreach>
+    </insert>
+</mapper>
