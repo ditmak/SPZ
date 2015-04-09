@@ -30,6 +30,8 @@ public class Main {
 			try {
 				date = (Date) sf.parse(data);
 				dt = new DateTime(date.getTime());
+				if(args.length==2)
+					dt= dt.plusHours(Integer.parseInt(args[1]));
 			} catch (ParseException e) {
 				System.out.println("请输入正确格式的数据如20150406");
 				System.exit(-1);
