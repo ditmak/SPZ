@@ -1,25 +1,35 @@
-package com.csl.util.baidu;
+package com.csl.util.net;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringBufferInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import com.csl.util.io.ByteIOUtils;
 
-public class BaiduHTTPUtil {
+public class HTTPUtil {
 	public static HttpURLConnection getConn(String url, String cookies,
-			String method) throws IOException {
+			String method,String userAgent) throws IOException {
 		URL temp = new URL(url);
 		HttpURLConnection connection = (HttpURLConnection) temp
 				.openConnection();
 		if (cookies != null) {
 			connection.setRequestProperty("cookie", cookies);
 		}
-		connection.setRequestProperty("host", "pan.baidu.com");
-		connection.setRequestProperty("referer", "http://pan.baidu.com/disk/home");
+		connection.setRequestProperty("host", "xxxx");
+		connection.setRequestProperty("referer", "xxxx");
 		connection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; rv:29.0) Gecko/20100101 Firefox/29.0");
 		connection.setRequestProperty("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 
@@ -27,8 +37,16 @@ public class BaiduHTTPUtil {
 		connection.setRequestProperty("connection", "keep-alive");
 		connection.setRequestProperty("pragma", "no-cache");
 		connection.setRequestMethod(method);
+		if (userAgent != null) {
+                    connection.setRequestProperty("user-agent", userAgent);
+            }
 		return connection;
 	}
+	       public static HttpURLConnection getConn(String url, String cookies,
+                       String method) throws IOException {
+              return getConn(url, cookies, method, null);
+       }
+
 
 	public static String getURLContent(String url,String cookies,String method
 			) {
@@ -50,6 +68,27 @@ public class BaiduHTTPUtil {
 		}
 	
 	}
+	 public static List<Element> getATagListByURL(String url) {
+	        try {
+	            SAXReader reader = new SAXReader();
+	            reader.setEntityResolver(new EntityResolver() {
+
+	                @Override
+	                public InputSource resolveEntity(String publicId,
+	                        String systemId) throws SAXException, IOException {
+	                    return new InputSource(new StringBufferInputStream(""));
+
+	                }
+	            });
+	            Document doc = reader.read(new URL(url));
+	            List<Element> list = doc.selectNodes("//a");
+	            return list;
+	        } catch (Exception e) {
+	            System.out.println(e + url);
+	            return getATagListByURL(url);
+	        }
+
+	    }
 	public static HttpURLConnection sendInfo(String url,String cookies,String method,
 			 Map<String, String> values) 
 	{

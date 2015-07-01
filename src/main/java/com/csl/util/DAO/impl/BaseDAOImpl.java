@@ -22,9 +22,13 @@ public class BaseDAOImpl<T> extends HibernateDaoSupport implements BaseDAO<T> {
 		Object object = getSession().get(clazz, id);
 		getHibernateTemplate().delete(object);
 	}
-	public T findEntry(Serializable id) {
+	@SuppressWarnings("unchecked")
+    public T findEntry(Serializable id) {
 		return (T) getHibernateTemplate().get(clazz, id);
 	}
+	public T findEntryByName(String name) {
+            return (T) getSession().createQuery("from "+clazz.getName() +" t where t.name=?").setString(0, name).uniqueResult();
+    }
 	public Serializable saveEntry(T t) {
 		return getHibernateTemplate().save(t);
 	}

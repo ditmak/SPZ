@@ -5,8 +5,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.management.RuntimeErrorException;
-
+import com.csl.util.net.HTTPUtil;
 import com.google.gson.Gson;
 
 public class BaiduUtil {
@@ -31,7 +30,7 @@ public class BaiduUtil {
 		return dlFile( dlReturn, savePath, magnet);
 	}
 	private  String getBDstoken(){
-		String content = BaiduHTTPUtil.getURLContent(homePage, cookie, "GET");
+		String content = HTTPUtil.getURLContent(homePage, cookie, "GET");
 		Matcher matcher = BDstokenpattern.matcher(content);
 		if(matcher.find()){
 			return matcher.group(1);
@@ -46,7 +45,7 @@ public class BaiduUtil {
 		values.put("save_path", "/");
 		values.put("source_url", magnet);
 		values.put("type", "1");
-		String returnData=BaiduHTTPUtil.getURLContent(url, cookie, "POST",values);
+		String returnData=HTTPUtil.getURLContent(url, cookie, "POST",values);
 		 return gson.fromJson(returnData, MagnetDLReturn.class);
 	}
 	private  String dlFile(MagnetDLReturn dl,String savePath,String magnet){
@@ -60,7 +59,7 @@ public class BaiduUtil {
 		values.put("t", System.currentTimeMillis()+"");
 		values.put("selected_idx", index);
 		values.put("task_from", "0");
-		return BaiduHTTPUtil.getURLContent(url, cookie, "POST", values);
+		return HTTPUtil.getURLContent(url, cookie, "POST", values);
 	};
 	
 }

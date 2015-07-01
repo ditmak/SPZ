@@ -9,6 +9,7 @@ public interface BaseDAO<T> {
 	void updateEntry(T entry);
 	void deleteEntry(Serializable entryId);
 	T findEntry(Serializable entryId);
+        T findEntryByName(String name);
 	Collection<T> findAllEntry();
 	Collection<T> findEntries(Serializable ...ids);
 }
