@@ -60,7 +60,7 @@ public class HTTPUtil {
 			HttpURLConnection conn = sendInfo(url, cookies, method, values);
 			InputStream ips = conn.getInputStream();
 			byte[] buf = ByteIOUtils.getInputSreamBytes(ips);
-			return new String(buf);
+			return new String(buf,"utf-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 			//return getURLContent(url,cookies,method,values);
@@ -114,6 +114,10 @@ public class HTTPUtil {
 			return sendInfo(url, cookies, method, values);
 		}
 	}
+    public static String getURLContent(String url) {
+        return getURLContent(url, null, "GET");
+        
+    }
 	
 	
 }
