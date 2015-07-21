@@ -4,20 +4,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PaiPan {
-    private static String[][] data={{"┏━━━━━━━━┳━━━━━┳━━━━━━━━┓",
+    private static String[][] data={{
+        "┏━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┓",
         "┃ ╲  天德    x1 ┃  白虎  x2┃  玉堂   x3  ╱ ┃",
-        "┃    ┏━━━━━╋━━━━━╋━━━━━┓    ┃",
-        "┃金匮┃    丁    ┃    壬    ┃    乙    ┃天牢┃",
-        "┃  x12 ┃   惊门   ┃   开门   ┃   休门   ┃ x4 ┃",
-        "┣━━╋━━━━━╋━━━━━╋━━━━━╋━━┫",
-        "┃朱雀┃    丙    ┃    癸    ┃    庚    ┃玄武┃",
-        "┃  x11 ┃   死门   ┃    戊    ┃   生门   ┃ x5 ┃",
-        "┣━━╋━━━━━╋━━━━━╋━━━━━╋━━┫",
-        "┃天刑┃    辛    ┃    甲    ┃    己    ┃司命┃",
-        "┃    ┃   景门   ┃   杜门   ┃   伤门   ┃ x6 ┃",
-        "┃ x10 ┗━━━━━╋━━━━━╋━━━━━┛    ┃",
-        "┃ ╱   明堂   x9 ┃  青龙  x8┃   勾陈   x7 ╲ ┃",
-        "┗━━━━━━━━┻━━━━━┻━━━━━━━━┛",
+        "┃          ┏━━━━━━━╋━━━━━━━━━╋━━━━━━┓              ┃",
+        "┃金匮   ┃    丁      ┃    壬          ┃    乙    ┃天牢       ┃",
+        "┃  x12┃   惊门   ┃   开门        ┃   休门  ┃ x4   ┃",
+        "┣━━━━━╋━━━━━━━╋━━━━━━━━━╋━━━━━━╋━━━━━━━┫",
+        "┃朱雀   ┃    丙      ┃    癸          ┃    庚    ┃玄武       ┃",
+        "┃  x11┃   死门   ┃    戊          ┃   生门   ┃ x5  ┃",
+        "┣━━━━━╋━━━━━━━╋━━━━━━━━━╋━━━━━━╋━━━━━━━┫",
+        "┃天刑  ┃    辛       ┃    甲           ┃    己    ┃司命      ┃",
+        "┃          ┃   景门    ┃   杜门        ┃   伤门   ┃ x6  ┃",
+        "┃ x10┗━━━━━━━╋━━━━━━━━━━╋━━━━━━━┛          ┃",
+        "┃ ╱   明堂   x9 ┃  青龙  x8┃   勾陈   x7 ╲   ┃",
+        "┗━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━━┛",
 }};
     private TrunkBranchDate date ;
    public PaiPan(TrunkBranchDate date) {
@@ -34,12 +35,12 @@ public class PaiPan {
        for (String input : currentData) {
         Matcher matcher = x.matcher(input);
          while(matcher.find()){
-             System.out.println(matcher.group());
              String s = matcher.group(1);
              int index = Integer.parseInt(s);
              index = getIndex(sort[time2]+index-1);
-             System.out.println(twelve[index]);
+             input = input.replace(matcher.group(), twelve[index]);
          }
+         System.out.println(input);
     }
    }
    public static void main(String[] args) {
