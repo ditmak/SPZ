@@ -6,13 +6,22 @@ import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.QName;
+import org.dom4j.dom.DOMAttribute;
+import org.dom4j.dom.DOMElement;
+import org.dom4j.dom.DOMEntityReference;
 import org.dom4j.io.SAXReader;
+import org.dom4j.tree.BaseElement;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -28,8 +37,8 @@ public class HTTPUtil {
 		if (cookies != null) {
 			connection.setRequestProperty("cookie", cookies);
 		}
-		connection.setRequestProperty("host", "xxxx");
-		connection.setRequestProperty("referer", "xxxx");
+		//connection.setRequestProperty("host", "http://mfkp.qzapp.z.qq.com/");
+		//connection.setRequestProperty("referer", "http://mfkp.qzapp.z.qq.com/");
 		connection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; rv:29.0) Gecko/20100101 Firefox/29.0");
 		connection.setRequestProperty("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 
@@ -63,7 +72,7 @@ public class HTTPUtil {
 			return new String(buf,"utf-8");
 		} catch (Exception e) {
 			e.printStackTrace();
-			//return getURLContent(url,cookies,method,values);
+			System.out.println(url);
 			throw new RuntimeException();
 		}
 	
@@ -71,18 +80,18 @@ public class HTTPUtil {
 	 public static List<Element> getATagListByURL(String url) {
 	        try {
 	            SAXReader reader = new SAXReader();
-	            reader.setEntityResolver(new EntityResolver() {
+                    reader.setEntityResolver(new EntityResolver() {
 
-	                @Override
-	                public InputSource resolveEntity(String publicId,
-	                        String systemId) throws SAXException, IOException {
-	                    return new InputSource(new StringBufferInputStream(""));
+                        @Override
+                        public InputSource resolveEntity(String publicId,
+                                String systemId) throws SAXException, IOException {
+                            return new InputSource(new StringBufferInputStream(""));
 
-	                }
-	            });
-	            Document doc = reader.read(new URL(url));
-	            List<Element> list = doc.selectNodes("//a");
-	            return list;
+                        }
+                    });
+                    Document doc = reader.read(new URL(url));
+                    List<Element> list = doc.selectNodes("//a");
+                    return list;
 	        } catch (Exception e) {
 	            System.out.println(e + url);
 	            return getATagListByURL(url);
@@ -111,6 +120,7 @@ public class HTTPUtil {
 		return conn;}
 		catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(url);
 			return sendInfo(url, cookies, method, values);
 		}
 	}

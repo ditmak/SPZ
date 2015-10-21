@@ -1,9 +1,17 @@
 *.class
+
 *.jar
+
 *.project
+
 *.classpath
 
 
 
+
 target
+
 .settings
+.project
+bin
+cfg.properties
