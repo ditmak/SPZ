@@ -29,6 +29,10 @@ import org.xml.sax.SAXException;
 import com.csl.util.io.ByteIOUtils;
 
 public class HTTPUtil {
+	private static String cookies= "";
+	public static void setCookies(String cookies) {
+		HTTPUtil.cookies = cookies;
+	}
 	public static HttpURLConnection getConn(String url, String cookies,
 			String method,String userAgent) throws IOException {
 		URL temp = new URL(url);
@@ -36,7 +40,8 @@ public class HTTPUtil {
 				.openConnection();
 		if (cookies != null) {
 			connection.setRequestProperty("cookie", cookies);
-		}
+		}else{
+			connection.setRequestProperty("cookie", "pvid=5840567320; pgv_flv=19.0 r0; ptui_loginuin=1206906465; RK=eXsvcpi4GT; pgv_pvid=4214206724; pt2gguin=o0605510491; uin=o0605510491; skey=@mV88S0oqk; ptisp=cnc; qzone_check=605510491_1447557328; ptcz=edc21e58d799800d2103203d4229c9d129bcc205def6b56332ac70c1dc8947bf; pgv_info=ssid=s2654391728"					);		}
 		//connection.setRequestProperty("host", "http://mfkp.qzapp.z.qq.com/");
 		//connection.setRequestProperty("referer", "http://mfkp.qzapp.z.qq.com/");
 		connection.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; rv:29.0) Gecko/20100101 Firefox/29.0");
@@ -77,7 +82,7 @@ public class HTTPUtil {
 		}
 	
 	}
-	 public static List<Element> getATagListByURL(String url) {
+	 public static List<Element> getATagListByURL(String url,String cookie) {
 	        try {
 	            SAXReader reader = new SAXReader();
                     reader.setEntityResolver(new EntityResolver() {
@@ -89,15 +94,20 @@ public class HTTPUtil {
 
                         }
                     });
-                    Document doc = reader.read(new URL(url));
+                    Document doc = reader.read(getRightInputStream(url,cookie));
                     List<Element> list = doc.selectNodes("//a");
                     return list;
 	        } catch (Exception e) {
 	            System.out.println(e + url);
-	            return getATagListByURL(url);
+	            return getATagListByURL(url,cookie);
 	        }
 
 	    }
+	 private static InputStream getRightInputStream(String url,String cookie){
+		 String content = getURLContent(url,cookie,"GET");
+		 content = content.replaceAll("&nbsp", "&#160");
+		 return new ByteArrayInputStream(content.getBytes());
+	 }
 	public static HttpURLConnection sendInfo(String url,String cookies,String method,
 			 Map<String, String> values) 
 	{
@@ -124,10 +134,4 @@ public class HTTPUtil {
 			return sendInfo(url, cookies, method, values);
 		}
 	}
-    public static String getURLContent(String url) {
-        return getURLContent(url, null, "GET");
-        
-    }
-	
-	
 }
