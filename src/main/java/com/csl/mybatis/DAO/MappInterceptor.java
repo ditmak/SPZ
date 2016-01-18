@@ -1,6 +1,7 @@
 package com.csl.mybatis.DAO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -32,9 +33,13 @@ import com.csl.mybatis.utils.ResultMapsUtil;
 		@Signature(type = Executor.class, method = "update", args = {
 			MappedStatement.class, Object.class }) })
 public class MappInterceptor implements Interceptor {
+	static {
+
+	}
 	private final static String _sql_regex = ".*MapperGD.*";
 	private static final List<ResultMapping> EMPTY_RESULTMAPPING = new ArrayList<ResultMapping>(
 			0);
+
 
 	private void processIntercept(final Object[] queryArgs) {
 		final MappedStatement ms = (MappedStatement) queryArgs[0];
@@ -55,7 +60,6 @@ public class MappInterceptor implements Interceptor {
 				e.printStackTrace();
 				return;
 			}
-
 			Class<?> entityClazz = ReflectionUtils.getSuperInterfaceGenricType(
 					clazz, 0);
 			String new_sql = MapperSqlHelper.getExecuSQL(entityClazz,
@@ -65,15 +69,14 @@ public class MappInterceptor implements Interceptor {
 			}
 			SqlSourceBuilder builder = new SqlSourceBuilder(
 					ms.getConfiguration());
-			System.out.println(new_sql);
-			SqlSource ss = builder.parse(new_sql, entityClazz);
+			SqlSource ss = builder.parse(new_sql, entityClazz,
+					new HashMap<String, Object>(0));
 			MappedStatement new_ms = copyFromMappedStatement(ms, ss,
 					entityClazz, new_sql.contains("count"));
 			queryArgs[0] = new_ms;
 		}
 
 	}
-
 	private MappedStatement copyFromMappedStatement(MappedStatement ms,
 			SqlSource newSqlSource, Class<?> clazz, boolean isType) {
 		Builder builder = new MappedStatement.Builder(ms.getConfiguration(),
@@ -84,8 +87,8 @@ public class MappInterceptor implements Interceptor {
 		builder.statementType(ms.getStatementType());
 		builder.keyGenerator(ms.getKeyGenerator());
 		// builder.keyProperty(ms.getKeyProperties());
-
-		if (ms.getKeyProperties() != null && ms.getKeyProperties().length != 0) {
+		if (ms.getKeyProperties() != null
+				&& ms.getKeyProperties().length != 0) {
 			StringBuilder keyProperties = new StringBuilder();
 			for (String keyProperty : ms.getKeyProperties()) {
 				keyProperties.append(keyProperty).append(",");
@@ -115,7 +118,6 @@ public class MappInterceptor implements Interceptor {
 		builder.useCache(ms.isUseCache());
 		return builder.build();
 	}
-
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
 		processIntercept(invocation.getArgs());
@@ -130,5 +132,4 @@ public class MappInterceptor implements Interceptor {
 	@Override
 	public void setProperties(Properties arg0) {
 	}
-
 }
