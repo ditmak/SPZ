@@ -3,10 +3,10 @@ package com.csl.mybatis.DAO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Executor;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.builder.SqlSourceBuilder;
+import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.MappedStatement.Builder;
 import org.apache.ibatis.mapping.ResultMap;
@@ -26,11 +26,11 @@ import com.csl.mybatis.utils.ReflectionUtils;
 import com.csl.mybatis.utils.ResultMapsUtil;
 
 @Intercepts({
-		@Signature(type = Executor.class, method = "query", args = {
-				MappedStatement.class, Object.class, RowBounds.class,
-				ResultHandler.class }),
+	@Signature(type = Executor.class, method = "query", args = {
+		MappedStatement.class, Object.class, RowBounds.class,
+		ResultHandler.class }),
 		@Signature(type = Executor.class, method = "update", args = {
-				MappedStatement.class, Object.class }) })
+			MappedStatement.class, Object.class }) })
 public class MappInterceptor implements Interceptor {
 	private final static String _sql_regex = ".*MapperGD.*";
 	private static final List<ResultMapping> EMPTY_RESULTMAPPING = new ArrayList<ResultMapping>(
@@ -60,10 +60,12 @@ public class MappInterceptor implements Interceptor {
 					clazz, 0);
 			String new_sql = MapperSqlHelper.getExecuSQL(entityClazz,
 					mapperSQL, parameter);
-			if (StringUtils.isBlank(new_sql))
+			if (StringUtils.isBlank(new_sql)) {
 				throw new MybatisDAOException("没有匹配的方法");
+			}
 			SqlSourceBuilder builder = new SqlSourceBuilder(
 					ms.getConfiguration());
+			System.out.println(new_sql);
 			SqlSource ss = builder.parse(new_sql, entityClazz);
 			MappedStatement new_ms = copyFromMappedStatement(ms, ss,
 					entityClazz, new_sql.contains("count"));
@@ -114,15 +116,18 @@ public class MappInterceptor implements Interceptor {
 		return builder.build();
 	}
 
+	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
 		processIntercept(invocation.getArgs());
 		return invocation.proceed();
 	}
 
+	@Override
 	public Object plugin(Object o) {
 		return Plugin.wrap(o, this);
 	}
 
+	@Override
 	public void setProperties(Properties arg0) {
 	}
 

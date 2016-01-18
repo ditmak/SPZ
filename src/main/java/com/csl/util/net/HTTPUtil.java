@@ -1,27 +1,17 @@
 package com.csl.util.net;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.dom4j.QName;
-import org.dom4j.dom.DOMAttribute;
-import org.dom4j.dom.DOMElement;
-import org.dom4j.dom.DOMEntityReference;
 import org.dom4j.io.SAXReader;
-import org.dom4j.tree.BaseElement;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -47,14 +37,14 @@ public class HTTPUtil {
 		connection.setRequestProperty("pragma", "no-cache");
 		connection.setRequestMethod(method);
 		if (userAgent != null) {
-                    connection.setRequestProperty("user-agent", userAgent);
-            }
+			connection.setRequestProperty("user-agent", userAgent);
+		}
 		return connection;
 	}
-	       public static HttpURLConnection getConn(String url, String cookies,
-                       String method) throws IOException {
-              return getConn(url, cookies, method, null);
-       }
+	public static HttpURLConnection getConn(String url, String cookies,
+			String method) throws IOException {
+		return getConn(url, cookies, method, null);
+	}
 
 
 	public static String getURLContent(String url,String cookies,String method
@@ -63,8 +53,8 @@ public class HTTPUtil {
 	}
 
 	public static String getURLContent(String url,String cookies,String method,
-			 Map<String, String> values) {
-	
+			Map<String, String> values) {
+
 		try {
 			HttpURLConnection conn = sendInfo(url, cookies, method, values);
 			InputStream ips = conn.getInputStream();
@@ -75,59 +65,59 @@ public class HTTPUtil {
 			System.out.println(url);
 			throw new RuntimeException();
 		}
-	
+
 	}
-	 public static List<Element> getATagListByURL(String url) {
-	        try {
-	            SAXReader reader = new SAXReader();
-                    reader.setEntityResolver(new EntityResolver() {
+	public static List<Element> getATagListByURL(String url) {
+		try {
+			SAXReader reader = new SAXReader();
+			reader.setEntityResolver(new EntityResolver() {
 
-                        @Override
-                        public InputSource resolveEntity(String publicId,
-                                String systemId) throws SAXException, IOException {
-                            return new InputSource(new StringBufferInputStream(""));
+				@Override
+				public InputSource resolveEntity(String publicId,
+						String systemId) throws SAXException, IOException {
+					return new InputSource(new StringBufferInputStream(""));
 
-                        }
-                    });
-                    Document doc = reader.read(new URL(url));
-                    List<Element> list = doc.selectNodes("//a");
-                    return list;
-	        } catch (Exception e) {
-	            System.out.println(e + url);
-	            return getATagListByURL(url);
-	        }
+				}
+			});
+			Document doc = reader.read(new URL(url));
+			List<Element> list = doc.selectNodes("//a");
+			return list;
+		} catch (Exception e) {
+			System.out.println(e + url);
+			return getATagListByURL(url);
+		}
 
-	    }
+	}
 	public static HttpURLConnection sendInfo(String url,String cookies,String method,
-			 Map<String, String> values) 
+			Map<String, String> values)
 	{
 		try{
-		HttpURLConnection conn = getConn(url, cookies, method);
-		if (values != null) {
-			StringBuffer sb = new StringBuffer();
-			Set<String> keys = values.keySet();
-			for (String key : keys) {
-				sb.append(key).append("=").append(values.get(key))
-						.append("&");
+			HttpURLConnection conn = getConn(url, cookies, method);
+			if (values != null) {
+				StringBuffer sb = new StringBuffer();
+				Set<String> keys = values.keySet();
+				for (String key : keys) {
+					sb.append(key).append("=").append(values.get(key))
+					.append("&");
+				}
+				sb.deleteCharAt(sb.length() - 1);
+				conn.setDoOutput(true);
+				conn.getOutputStream().write(sb.toString().getBytes());
+				conn.getOutputStream().flush();
+				conn.getOutputStream().close();
 			}
-			sb.deleteCharAt(sb.length() - 1);
-			conn.setDoOutput(true);
-			conn.getOutputStream().write(sb.toString().getBytes());
-			conn.getOutputStream().flush();
-			conn.getOutputStream().close();
-		}
-		conn.connect();
-		return conn;}
+			conn.connect();
+			return conn;}
 		catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(url);
 			return sendInfo(url, cookies, method, values);
 		}
 	}
-    public static String getURLContent(String url) {
-        return getURLContent(url, null, "GET");
-        
-    }
-	
-	
+	public static String getURLContent(String url) {
+		return getURLContent(url, null, "GET");
+
+	}
+
+
 }
