@@ -7,6 +7,6 @@ import com.csl.util.tencent.QQ;
 public class TestQQ {
 	@Test
 	public void testQQ() throws Exception{
-		QQ qq = new QQ("123","123");
+		new QQ("123","123");
 	}
 }

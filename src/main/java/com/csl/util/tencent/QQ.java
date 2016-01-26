@@ -1,6 +1,5 @@
 package com.csl.util.tencent;
 
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.http.HttpEntity;
@@ -9,7 +8,6 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -43,13 +41,16 @@ public class QQ {
 		HttpEntity entity = response1.getEntity();
 		System.out.println("Login form get: " + response1.getStatusLine());
 		EntityUtils.consume(entity);
-		List<Cookie> cookies = store.getCookies();
-		if (cookies.isEmpty()) {
-			System.out.println("None");
-		} else {
-			for (int i = 0; i < cookies.size(); i++) {
-				System.out.println("- " + cookies.get(i).toString());
+		store.getCookies();
+	}
+	private void check(){
+		Properties props = ConfigUtils.loadProperties("qqlogin.properties");
+		RequestBuilder requestBuilder = RequestBuilder.get(urlCheck);
+		if (props != null) {
+			for (String key : props.stringPropertyNames()) {
+				requestBuilder.addParameter(key, props.getProperty(key));
 			}
 		}
+		requestBuilder.build();
 	}
 }
