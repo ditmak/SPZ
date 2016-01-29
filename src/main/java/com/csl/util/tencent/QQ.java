@@ -36,6 +36,8 @@ public class QQ {
 	private String showVcode="0";
 	private HttpClient client ;
 	private CookieStore store =new  BasicCookieStore();
+	static{
+	}
 	public QQ(String qq,String password) throws Exception{
 		this.qq=qq;
 		this.password=password;
@@ -112,6 +114,9 @@ public class QQ {
 				System.out.println(cookie);
 			}
 		}
+	}
+	private String getSecret(){
+		return null;
 	}
 	private String getCookie(String name){
 		if (store != null) {
