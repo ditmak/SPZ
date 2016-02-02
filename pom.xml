@@ -100,5 +100,10 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.10</version>
 		</dependency>
+		<dependency>
+    <groupId>com.github.jponge</groupId>
+    <artifactId>lzma-java</artifactId>
+    <version>1.2</version>
+</dependency>
 	</dependencies>
 </project>

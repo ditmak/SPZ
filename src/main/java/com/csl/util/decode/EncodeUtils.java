@@ -11,8 +11,12 @@ import javax.crypto.Cipher;
 import org.apache.commons.codec.binary.Base64;
 
 public class EncodeUtils{
-	public static String RSA_CODE="RSA";
+	public static final String RSA_CODE="RSA";
+	public static final String DES_CODE="DES";
 	private static byte[] doFinal(Cipher cipher,byte[] data,int size) throws Exception{
+		if(size==0){
+			return cipher.doFinal(data);
+		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		int offset = 0;
 		int inputLength = data.length;
@@ -30,21 +34,21 @@ public class EncodeUtils{
 		}
 		return baos.toByteArray();
 	}
-	public static byte[] encodeByKey(byte[] data,Key key,Cipher cipher) throws Exception{
+	public static byte[] encodeByKey(byte[] data,Key key,Cipher cipher,int codeSize) throws Exception{
 		cipher.init(Cipher.ENCRYPT_MODE, key);
-		return doFinal(cipher, data, 117);
+		return doFinal(cipher, data, codeSize);
 	}
-	public static byte[] decodeByKey(byte[] data,Key key,Cipher cipher)throws Exception{
+	public static byte[] decodeByKey(byte[] data,Key key,Cipher cipher,int codeSize)throws Exception{
 		cipher.init(Cipher.DECRYPT_MODE, key);
-		return doFinal(cipher, data, 128);
+		return doFinal(cipher, data, codeSize);
 	}
 	public static byte[] encodeByRSAKEY(byte[] data,Key key) throws Exception{
 		Cipher cipher =Cipher.getInstance("RSA");
-		return encodeByKey(data, key, cipher);
+		return encodeByKey(data, key, cipher,117);
 	}
 	public static byte[] decodeByRSAKEY(byte[] data,Key publickey) throws Exception{
 		Cipher cipher = Cipher.getInstance("RSA");
-		return decodeByKey(data, publickey, cipher);
+		return decodeByKey(data, publickey, cipher,128);
 	}
 	public static byte[] encodeByRSAPublicKEY(byte[]data ,String key)throws Exception{
 		return encodeByRSAKEY(data, string2RSAPublicKey(key));
