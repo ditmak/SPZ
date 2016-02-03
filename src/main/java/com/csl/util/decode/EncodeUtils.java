@@ -9,6 +9,7 @@ import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 
 public class EncodeUtils{
 	public static final String RSA_CODE="RSA";
@@ -64,6 +65,11 @@ public class EncodeUtils{
 	}
 	public static Key string2RSAPublicKey(String key) throws Exception{
 		X509EncodedKeySpec  spec = new X509EncodedKeySpec(Base64.decodeBase64(key));
+		KeyFactory keyFactory = KeyFactory.getInstance(RSA_CODE);
+		return keyFactory.generatePublic(spec);
+	}
+	public static Key HexSTring2RSAPublicKey(String key) throws Exception{
+		X509EncodedKeySpec  spec = new X509EncodedKeySpec(Hex.decodeHex(key.toCharArray()));
 		KeyFactory keyFactory = KeyFactory.getInstance(RSA_CODE);
 		return keyFactory.generatePublic(spec);
 	}

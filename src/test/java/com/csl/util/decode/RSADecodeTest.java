@@ -26,6 +26,9 @@ public class RSADecodeTest {
 	public void testDF() {
 		DecimalFormat df = new DecimalFormat("##0.00");
 		System.out.println(df.format((2345l - 987l) / (2345l * 1d) * 100));
+		String s = "hello";
+		char[] s1 = Hex.encodeHex(s.getBytes());
+		System.out.println(new String(s1));
 	}
 
 	@Test

@@ -1,11 +1,14 @@
 package com.csl.util.tencent;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -17,6 +20,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.csl.util.decode.EncodeUtils;
 import com.csl.util.io.ByteIOUtils;
 
 
@@ -115,8 +119,25 @@ public class QQ {
 			}
 		}
 	}
-	private String getSecret(){
+	private String getSecret() throws Exception{
+		byte[] passwordbyte=DigestUtils.md5(password);
+		int qqInt = Integer.parseInt(qq);
+		byte[] qqbyte = intToByteArray(qqInt);
+		ArrayUtils.addAll(passwordbyte, qqbyte);
+		//String md5Hex = DigestUtils.md5Hex(addAll);
+		Key publickey = EncodeUtils.HexSTring2RSAPublicKey("F20CE00BAE5361F8FA3AE9CEFA495362FF7DA1BA628F64A347F0A8C012BF0B254A30CD92ABFFE7A6EE0DC424CB6166F8819EFA5BCCB20EDFB4AD02E412CCF579B1CA711D55B8B0B3AEB60153D5E0693A2A86F3167D7847A0CB8B00004716A9095D9BADC977CBB804DBDCBA6029A9710869A453F27DFDDF83C016D928B3CBF4C7");
+		EncodeUtils.encodeByRSAKEY(passwordbyte, publickey);
+		//char[] encodeHex = Hex.encodeHex(code);
+		System.out.println("xxx");
 		return null;
+	}
+	private static byte[] intToByteArray(int a) {
+		return new byte[] {
+				(byte) (a >> 24 & 0xFF),
+				(byte) (a >> 16 & 0xFF),
+				(byte) (a >> 8 & 0xFF),
+				(byte) (a & 0xFF)
+		};
 	}
 	private String getCookie(String name){
 		if (store != null) {
